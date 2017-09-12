@@ -138,6 +138,11 @@ namespace Jose
         private IJsonMapper jsMapper = new NewtonsoftMapper();
 #endif       
       
+        public JwtSettings()
+        {
+            JoseOutputSerialization = JoseSerialization.Compact;
+        }
+
         //Builder-style methods
         public JwtSettings RegisterJwa(JweAlgorithm alg, IKeyManagement impl)
         {
@@ -338,5 +343,7 @@ namespace Jose
 
             throw new InvalidAlgorithmException(string.Format("Compression algorithm is not supported: {0}.", header));
         }
+
+        public JoseSerialization JoseOutputSerialization { get; set; }
     }
 }

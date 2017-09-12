@@ -5,6 +5,12 @@ using Jose.jwe;
 
 namespace Jose
 {
+    public enum JoseSerialization
+    {
+        Compact,
+        JSON
+    }
+
     public enum JwsAlgorithm
     {
         none,
@@ -238,11 +244,26 @@ namespace Jose
                 payload = jwtSettings.Compression(compression.Value).Compress(payload);
             }
 
-            byte[] header = Encoding.UTF8.GetBytes(jwtSettings.JsonMapper.Serialize(jwtHeader));
-            byte[] aad = Encoding.UTF8.GetBytes(Compact.Serialize(header));
-            byte[][] encParts = _enc.Encrypt(aad, payload, cek);
+            string protectedHeaderBase64 = Base64Url.Encode(Encoding.UTF8.GetBytes(jwtSettings.JsonMapper.Serialize(jwtHeader)));
+            byte[] protectedHeader = Encoding.UTF8.GetBytes(protectedHeaderBase64);
+            // library API uses header as AAD but doesn't allow for user specified AAD per the spec
+            // placeholder for now
+            byte[] aad = null;
 
-            return Compact.Serialize(header, encryptedCek, encParts[0], encParts[1], encParts[2]);
+            // JWE spec specifies protected header AND user specified AAD, see https://tools.ietf.org/html/rfc7516#section-5.1 item 14
+            // for mechanism to combine them
+            byte[] effectiveAad = null;
+            if (aad != null)
+                effectiveAad = Arrays.Concat(protectedHeader, new byte[] { (byte)'.' }, aad);
+            else
+                effectiveAad = protectedHeader;
+
+            // TODO: should this be extraHeaders? Currently all extra headers go to header and protectedheader
+            // which might be safer. Otherwise have extraUnprotectedHeader as an API param above
+            IDictionary<string, object> unprotectedHeader = null; 
+
+            byte[][] encParts = _enc.Encrypt(effectiveAad, payload, cek);
+            return SerializeOutput.AsJwe(jwtSettings, encryptedCek, protectedHeaderBase64, unprotectedHeader, jwtHeader, aad, encParts[0], encParts[1], encParts[2]);
         }
 
         /// <summary>
