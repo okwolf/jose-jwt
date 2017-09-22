@@ -1,8 +1,11 @@
-{
-    "frameworks": {
-        "net461": {}
-    },
-    "runtimes": {
-        "win": {}
-    }
+﻿{
+  "frameworks": {
+    "net461": {}
+  },
+  "runtimes": {
+    "win": {}
+  },
+  "dependencies": {
+    "Newtonsoft.Json": "10.0.3"
+  }
 }

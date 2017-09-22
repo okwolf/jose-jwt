@@ -49,6 +49,10 @@
     <Compile Include="crypto\PBKDF2.cs" />
     <Compile Include="crypto\RsaOaep.cs" />
     <Compile Include="crypto\RsaPss.cs" />
+    <Compile Include="JoseHeader.cs" />
+    <Compile Include="JsonWebKey\EncryptionAlgorithm.cs" />
+    <Compile Include="JsonWebKey\KeyType.cs" />
+    <Compile Include="JsonWebKey\Operation.cs" />
     <Compile Include="json\IJsonMapper.cs" />
     <Compile Include="json\JSSerializerMapper.cs" />
     <Compile Include="json\NewtonsoftMapper.cs" />
@@ -61,9 +65,11 @@
     <Compile Include="jwa\Pbse2HmacShaKeyManagementWithAesKeyWrap.cs" />
     <Compile Include="jwa\RsaKeyManagement.cs" />
     <Compile Include="jwa\RsaOaep256KeyManagement.cs" />
+    <Compile Include="JWE.cs" />
     <Compile Include="jwe\AesCbcHmacEncryption.cs" />
     <Compile Include="jwe\AesGcmEncryption.cs" />
     <Compile Include="jwe\IJweAlgorithm.cs" />
+    <Compile Include="JWK.cs" />
     <Compile Include="jws\EcdsaUsingSha.cs" />
     <Compile Include="jws\HmacUsingSha.cs" />
     <Compile Include="jws\IJwsAlgorithm.cs" />
@@ -80,9 +86,13 @@
     <Compile Include="Security\Cryptography\RsaKey.cs" />
     <Compile Include="util\Arrays.cs" />
     <Compile Include="util\Base64Url.cs" />
+    <Compile Include="util\Base64UrlJsonConverter.cs" />
     <Compile Include="util\Compact.cs" />
     <Compile Include="util\Dictionaries.cs" />
     <Compile Include="util\Ensure.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="JsonWebEncryption\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
