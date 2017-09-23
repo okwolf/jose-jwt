@@ -54,7 +54,9 @@ namespace Jose
                     if (encryptedCek != null && encryptedCek != Arrays.Empty)
                         jweOutJsonFlat.Add("encrypted_key", Base64Url.Encode(encryptedCek));
 
-                    jweOutJsonFlat.Add("aad", Base64Url.Encode(aad));               // with the value BASE64URL(JWE AAD)
+                    if (aad != null && aad != Arrays.Empty)
+                        jweOutJsonFlat.Add("aad", Base64Url.Encode(aad));           // with the value BASE64URL(JWE AAD)
+
                     jweOutJsonFlat.Add("iv", Base64Url.Encode(iv));                 // with the value BASE64URL(JWE Initialization Vector)
                     jweOutJsonFlat.Add("ciphertext", Base64Url.Encode(ciphertext)); // with the value BASE64URL(JWE Ciphertext)
                     jweOutJsonFlat.Add("tag", Base64Url.Encode(tag));               // with the value BASE64URL(JWE Authentication Tag)
