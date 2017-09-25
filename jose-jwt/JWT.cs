@@ -263,7 +263,7 @@ namespace Jose
             IDictionary<string, object> unprotectedHeader = null; 
 
             byte[][] encParts = _enc.Encrypt(effectiveAad, payload, cek);
-            return SerializeOutput.AsJwe(jwtSettings, encryptedCek, protectedHeaderBase64, unprotectedHeader, jwtHeader, aad, encParts[0], encParts[1], encParts[2]);
+            return SerializeOutput.AsJwe(jwtSettings, encryptedCek, protectedHeaderBase64, unprotectedHeader, jwtHeader, effectiveAad, encParts[0], encParts[1], encParts[2]);
         }
 
         /// <summary>

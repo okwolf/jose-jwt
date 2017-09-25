@@ -1,15 +1,25 @@
 using Jose;
+using Jose.jwe;
 using System;
 using Xunit;
 
 namespace UnitTests
 {
-    public class JsonOutputTest
+    public class JsonOutputTest : IDisposable
     {
+        public JsonOutputTest()
+        {
+            Jose.JWT.DefaultSettings.JoseOutputSerialization = JoseSerialization.JSON;
+        }
+
+        public void Dispose()
+        {
+            Jose.JWT.DefaultSettings.JoseOutputSerialization = JoseSerialization.Compact;
+        }
+
         [Fact]
         public void JsonOutput()
         {
-            Jose.JWT.DefaultSettings.JoseOutputSerialization = JoseSerialization.JSON;
             var payload = new
             {
                 Email = "username@example.com",
@@ -30,8 +40,25 @@ namespace UnitTests
             var jwe = Jose.JWT.Encode(payload, secretKey, JweAlgorithm.DIR, JweEncryption.A256GCM);
             Console.WriteLine($"JWE is: {jwe}");
 
+            JweDto expectedOutput = new JweDto()
+            {
+                @protected = "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0",
+                header = new JweHeader()
+                {
+                    alg = "dir",
+                    enc = "A256GCM"
+                },
+                aad = "ZXlKaGJHY2lPaUprYVhJaUxDSmxibU1pT2lKQk1qVTJSME5OSW4w"
+            };
+
+            var mapper = new JSSerializerMapper();
+            var parsedJwe = mapper.Parse<JweDto>(jwe);
+
             // test
-            Assert.True(jwe != null);            
+            Assert.Equal(expectedOutput.@protected, parsedJwe.@protected);
+            Assert.Equal(expectedOutput.header.alg, parsedJwe.header.alg);
+            Assert.Equal(expectedOutput.header.enc, parsedJwe.header.enc);
+            Assert.Equal(expectedOutput.aad, parsedJwe.aad);
         }
     }
 }
